@@ -1,6 +1,6 @@
 import pygame
 import random
-from time import time
+import time
 from math import *
 def rotate(surface, angle, pivot, offset): 
     rotated_image = pygame.transform.rotozoom(surface, -angle, 1)  
@@ -8,7 +8,7 @@ def rotate(surface, angle, pivot, offset):
     rect = rotated_image.get_rect(center=pivot+rotated_offset)
     return rotated_image, rect 
 
-speed = -100
+speed = 3
 class BULLET():
     def __init__(self, x, y, speedx, sppedy) -> None:
          self.x = x
@@ -68,7 +68,8 @@ while run:
             angle -= 5
             bullet2 = PVOBULLET((SCREEN_WIDTH / 2 + (sin(radians(angle)) * 120)), (SCREEN_HEIGHT - (120 + cos(radians(angle)) * 120)), speed, speed, angle + 90)  
     if keys[pygame.K_SPACE]:
-            bullet2.move()
+            while bullet2.y >= 0 and bullet2.x >= 0 and bullet2.x <= 1600:
+                bullet2.move()
     rotated_image, rect = rotate(player_img, angle, pivot, offset)
     screen.fill(BG_COLOR)
     bulet1.move()
