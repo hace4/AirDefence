@@ -8,7 +8,7 @@ def rotate(surface, angle, pivot, offset):
     rect = rotated_image.get_rect(center=pivot+rotated_offset)
     return rotated_image, rect 
 
-speed = -10
+speed = -400
 class BULLET():
     def __init__(self, x, y, speedx, sppedy) -> None:
          self.x = x
@@ -30,7 +30,8 @@ class PVOBULLET():
         def spawn(self):
             pygame.draw.circle(screen, "WHITE", (self.x, self.y), 10)
         def update(self):
-            self.x += ((self.speedx) * cos(radians(self.angle))) / 1; self.y += ((self.speedy) * sin(radians(self.angle)) ) / 1
+            self.speedy += 3
+            self.x += ((self.speedx) * cos(radians(self.angle))) / 60; self.y += ((self.speedy) * sin(radians(self.angle)) + 30 ) / 60
 SCREEN_WIDTH = 1600
 SCREEN_HEIGHT = 900
 BG_COLOR = (250, 100, 50)
@@ -51,7 +52,7 @@ pygame.init()
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("AirDefense")
-bulet1 = BULLET(700, 300, -3, 3)
+bulet1 = BULLET(700, 300, -1, 1)
 run = True
 BULLET.x = random.randint(100, 1500); BULLET.y = random.randint(50, 500)
 bullet2 = PVOBULLET((0 / 2 + (sin(radians(angle)) * 120)), (0 - (120 + cos(radians(angle)) * 120)),0, 0, 0)
@@ -77,7 +78,14 @@ while run:
     screen.blit(rotated_image, rect)
     pygame.draw.rect(screen, PADDLE_COLOR, field)
     pygame.draw.rect(screen, STAND_COLOR, stand)
-  
+   
+    if ((abs(bullet2.x - bulet1.x) <= 25) and(abs(abs(bullet2.y - bulet1.y) <= 25)) ):
+        bullet2 = PVOBULLET((0 / 2 + (sin(radians(angle)) * 120)), (0 - (120 + cos(radians(angle)) * 120)),speed, speed, angle + 90)
+        bulet1.x = random.randint(100, 1500)
+        bulet1.y = random.randint(50, 75)
+        bulet1.speedx = random.randint(-1, 1) + 1
+        bulet1.speedy = random.randint(1, 1) + 1
+        print(True)
     if bulet1.y >= 800 or bulet1.x <= 0 or bulet1.x >= 1600:
         bulet1.x = random.randint(100, 1500)
         bulet1.y = random.randint(50, 500)
