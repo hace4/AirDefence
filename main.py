@@ -26,7 +26,6 @@ class Game():
         self.angle = 0
         pygame.display.flip()
     def rotate(self, surface, angle, pivot, offset):
-
         self.rotated_image = pygame.transform.rotozoom( self.surface, - self.angle, 1)  # Rotate the image.
         self.rotated_offset =  self.offset.rotate( self.angle)  # Rotate the offset vector.
         # Add the offset vector to the center/pivot point to shift the rect.
