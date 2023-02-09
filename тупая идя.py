@@ -11,11 +11,12 @@ massive1 = []
 a = 0
 speed = -400
 class BULLET():
-    def __init__(self, x, y, speed) -> None:
+    def __init__(self, x, y, speed, spaw) -> None:
          self.x = x
          self.y = y
          self.speedx = speed
          self.speedy = speed
+         self.spaw = spaw
     def spawn(self):
         pygame.draw.circle(screen, "WHITE", (self.x, self.y), 25)
     def move(self):
@@ -56,7 +57,7 @@ run = True
 BULLET.x = random.randint(100, 1500); BULLET.y = random.randint(50, 500)
 bullet2 = PVOBULLET((0 / 2 + (sin(radians(angle)) * 120)), (0 - (120 + cos(radians(angle)) * 120)),0, 0, 0)
 #print((SCREEN_WIDTH / 2 + (sin(radians(90 + angle)) * 120)), (SCREEN_HEIGHT -  (100 + (cos(radians(90 + angle)) * 120))))
-massive1.append(BULLET(random.randint(200 , 1400), 100, random.randint(1, 3)))
+massive1 = [BULLET(random.randint(200 , 1400), 100, random.randint(1, 3), False) for i in range(4)]
 while run:    
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -71,36 +72,32 @@ while run:
         bullet2.spawn()
     rotated_image, rect = rotate(player_img, angle, pivot, offset)
     screen.fill(BG_COLOR)
-    bulet1.move()
-    bulet1.spawn()
     bullet2.spawn()
     bullet2.update()
     screen.blit(rotated_image, rect)
     pygame.draw.rect(screen, PADDLE_COLOR, field)
     pygame.draw.rect(screen, STAND_COLOR, stand)
-    for bulet1 in massive1:
-        if a >= 60:
-            a = 0
-            massive1.append(BULLET(random.randint(200 , 1400), 100, random.randint(1, 3)))
-        if ((abs(bullet2.x - bulet1.x) <= 25) and(abs(abs(bullet2.y - bulet1.y) <= 25)) ):
-            bullet2 = PVOBULLET((0 / 2 + (sin(radians(angle)) * 120)), (0 - (120 + cos(radians(angle)) * 120)),speed, speed, angle + 90)
-            bulet1.pop()
-            massive1.append(BULLET(random.randint(200 , 1400), 100, random.randint(1, 3)))
+    for i in range(4):
+        if a % 60 == 0:
+            if a == 180:
+                a = 0
+            if a % 60 == 0 and massive1[a // 60].spaw != True:
+                massive1[a // 60].spaw = True
+                massive1[a // 60].spawn()
+                massive1[a // 60].move()
+        if ((abs(bullet2.x - massive1[i].x) <= 25) and(abs(abs(bullet2.y - massive1[i].y) <= 25)) ):
+            bullet2 = PVOBULLET((0 / 2 + (sin(radians(angle)) * 120)), (0 - (120 + cos(radians(angle)) * 120)),speed, speed, angle + 90)            
+            massive1[i] = BULLET(random.randint(200 , 1400), 100, random.randint(1, 3), False)
             print(True) 
-    if ((abs(bullet2.x - bulet1.x) <= 25) and(abs(abs(bullet2.y - bulet1.y) <= 25)) ):
-        bullet2 = PVOBULLET((0 / 2 + (sin(radians(angle)) * 120)), (0 - (120 + cos(radians(angle)) * 120)),speed, speed, angle + 90)
-        bulet1.x = random.randint(100, 1500)
-        bulet1.y = random.randint(50, 75)
-        bulet1.speedx = random.randint(-1, 1) + 1
-        bulet1.speedy = random.randint(1, 1) + 1
-        print(True)
-    if bulet1.y >= 800 or bulet1.x <= 0 or bulet1.x >= 1600:
-        bulet1.x = random.randint(100, 1500)
-        bulet1.y = random.randint(50, 500)
-        bulet1.speedx = random.randint(-3, 3) + 1
-        bulet1.speedy = random.randint(3, 3) + 1
-        continue
+        if massive1[i].y >= 800 or massive1[i].x <= 0 or massive1[i].x >= 1600:
 
+            massive1[1] = BULLET(random.randint(200 , 1400), 100, random.randint(1, 3), False)
+        elif massive1[i].spaw == True:
+            massive1[i].spawn()
+            massive1[i].move()
+            continue
+    a += 1 
+    print(a)   
     clock.tick(60)
     #print(cos(radians(angle)))
     pygame.display.flip()
